@@ -18,13 +18,34 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', [UserController::class,'login'])->name('login');
-Route::get('/auth', [UserController::class,'auth'])->name('auth.login');
-Route::post('/logout', [])->name('logout');
+Route::middleware(['auth'])->group(function () {
 
-Route::get('/register', [ UserController::class, 'register' ])->name('register');
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+
+});
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
+Route::post('/auth', [UserController::class,'auth'])->name('auth.login');
+Route::get('/logout', [UserController::class,'logout'])->name('logout');
+
+Route::get('/register', function(){
+    return view('user.create');
+})->name('register');
 Route::post('/create', [ UserController::class, 'create' ])->name('create');
 
-Route::get('/list', [ UserController::class ])->name('register');
+Route::get('/reset-password', function(){
+    return view('auth.reset_password');
+})->name('reset.password.view');
+
+Route::get('/reset-password-user',  [ UserController::class, 'reset_password_view_user' ])->name('reset.password.view_user');
+Route::post('/update-password', [ UserController::class, 'update_password_user' ])->name('update_password');
+
+Route::get('/user-active', [ UserController::class,'user_active' ])->name('user.active');
 
 
